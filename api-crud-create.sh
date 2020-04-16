@@ -26,8 +26,10 @@ tb_values="$3"
 
 # Checa se todos os argumentos obrigatorios foram passados.
 if [ -z $tb_values ] || [ -z $tb_fields ]; then
+	# Exibe mensagem de erro
 	echo "ERROR The correct syntax is: 'tb_name:str' 'tb_fields:str' 'tb_values:str' "
 else
+	# Executa a query
 	QRY="INSERT INTO $tb_name ( $tb_fields ) VALUES ( $tb_values ) RETURNING user_id"
 	
 	# Executa a query

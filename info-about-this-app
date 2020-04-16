@@ -1,0 +1,93 @@
+# ----------------------------------------------
+# LEONARDO A CARRILHO
+# 2020 APRIL
+# Some notes about this app
+# Anotacoes mentais, para servir de direcao...
+# ----------------------------------------------
+Information about this app:
+
+MECÂNICA:
+	User vê pessoas proximas a sua volta (range pequeno);
+	User pode adicionar a pessoa (max de "n" contatos);
+ 	User pode enviar ação a alguém;
+ 	User recebe pedidos de add - aceita ou não;
+ 	User pode bloquear contatos;
+	User pode deletar contatos;
+
+PERFIS ADICIONADOS:
+	Os perfis adicionados serão desintegrados (deletados) após x dias;
+	O User poderá add "n" perfis (maybe 9);
+	A cada dia, a foto dos contatos vão esmaecendo, até que em x dias o contato
+	sumirá (automaticamente deletado);
+	Porém, em caso do contato ser um redor novamente, a sua foto subirá ao topo
+	da tela e a contagem da desintegração será resetada.
+
+
+BANCO DE DADOS:
+	Cadastro do prospect gera:
+		--> Insert em tb_user;
+		--> Create tb_contact_id;
+
+	Login gera:
+		--> Update date/time/IP tb_user;
+
+	Add contato gera:
+		--> Insert user_id(A) em tb_contact_id(A) na coluna ID e id(B) do contato no campo "wait";
+		--> Insert user_id(B) do contato em tb_contact_id(B) na coluna ID e id de A na coluna "permit";
+		OBS: Ao (A) solicitar add para (B), B terá a permissao de ver o perfil de A antes de aceitá-lo.
+
+
+
+ROTAS:
+	/contact (criacao, edicao e delecao do user/perfil)
+		get: NOT;
+		post: Insert user;
+		put: Edit passwd/ name/ birth...;
+		delete: Delete account;
+
+	/contact/contacts (permite, bloqueia, convida e deleta contatos)
+		get: * {id};
+		post: add contact;
+		put: Permit/Block/ contact;
+		delete: Delete contact;
+
+	/contact/contacts/login (loga no app)
+		get: NOT;
+		post: Send passwd & ID;
+		put: NOT;
+		delete: NOT;
+
+	/contact/contacts/action (envia/recebe acoes)
+		get: * {id};
+		post: action;
+		put: NOT;
+		delete: NOT;
+
+	/contact/contacts/photos (fotos do perfil)
+		get: {id};
+		post: ID da foto postada (upload)
+		put: NOT;
+		delete: Delete picture from table and CDN;
+
+	/redor/position
+		get: {id};
+		post: NOT;
+		put: Update position;
+		delete: NOT;
+
+
+FLUXOGRAMA:
+	(inicio) -> [tela login] -> <tem cadastro?> sim -> [tela main] >>
+							[tela cadastro] <- nao
+
+							>>[tela main] -> <tap foto?> sim -> [tela perfil_foto] >>
+							 	[tela main] <- nao
+
+							[tela main] -> <acessar menu?> sim -> |MENU:perfil:contatos:planos:logout,delete account|
+							[tela main] <- nao
+
+							>>[tela perfil_foto] -> <add contato?> sim -> /API/ ::
+								[tela perfil_foto] <- nao
+
+							>>[tela perfil_foto] -> <envia acao?> sim -> [tela acao] -> /API/ ::
+								[tela perfil_foto] <- nao
