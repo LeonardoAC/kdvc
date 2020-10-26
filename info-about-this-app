@@ -76,18 +76,23 @@ ROTAS:
 		delete: NOT;
 
 
-FLUXOGRAMA:
-	(inicio) -> [tela login] -> <tem cadastro?> sim -> [tela main] >>
-							[tela cadastro] <- nao
+FLUXOGRAMA (do app):
+	(inicio) -> [tela login] -> <tem cadastro?> <>sim -> [tela main] >>
+							<>nao -> [tela cadastro]
 
-							>>[tela main] -> <tap foto?> sim -> [tela perfil_foto] >>
-							 	[tela main] <- nao
+							>>[tela main] -> <tap foto?> <>sim -> [tela perfil_foto]
+							 				<>nao -> [tela main]
 
-							[tela main] -> <acessar menu?> sim -> |MENU:perfil:contatos:planos:logout,delete account|
-							[tela main] <- nao
+							>>[tela main] -> <acessar menu?> <>sim -> |MENU:perfil:contatos:planos:logout:delete account|
+											<>nao -> [tela main]
 
-							>>[tela perfil_foto] -> <add contato?> sim -> /API/ ::
-								[tela perfil_foto] <- nao
+							>>[tela perfil_foto] -> <add contato?> <>sim -> /API/ ::
+												<>nao -> [tela perfil_foto]
 
-							>>[tela perfil_foto] -> <envia acao?> sim -> [tela acao] -> /API/ ::
-								[tela perfil_foto] <- nao
+							>>[tela perfil_foto] -> <envia acao?> <>sim -> [tela acao] -> /API/ ::
+												<>nao - >[tela perfil_foto]
+
+
+DICIONARIO:
+tela main = Tela principal do app, onde sao exibidas as fotos dos redores.
+tela perfil_foto = Tela com detalhe (e acoes) do redor cujo user selecionou na tela main. 

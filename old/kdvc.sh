@@ -2,11 +2,7 @@
 # ----------------------
 # Leonardo A Carrilho
 # 2020, April
-#
-# Route ip-number:port/contact/contacts
-#
-# Gerencia contatos do user: add, deleta, permite, bloqueia
-#
+# This is the controller
 # ----------------------
 echo "Content-Type: text/html"
 echo
@@ -22,11 +18,11 @@ function funcExtractParamAndSanitize(){
 	# Param by POST, PUT, PATCH, DELETE (Internal)
 	if [ $1 == "I" ]; then
 		#echo Interno
-		echo "${2}" | jq '.employees.employee[0].id'
+		echo "${2}" | jq '.employees.employee[0].firstName'
 	#
 	# Param by URL - GET (External)
 	elif [ $1 == "E" ]; then
-		/bin/sh api-response.sh "Externo"
+		echo Externo
 	fi
 }
 
@@ -37,9 +33,9 @@ if [ $TYPEREQUEST == "GET" ]; then
 	# Check if URL carry params or not
 	if [ -z $QUERY_STRING ]; then
 		# No params
-		/bin/sh api-response.sh "Empty URL"
+		echo "URL returns empty"
 	else
-		funcExtractParamAndSanitize "E" "$QUERY_STRING"
+		funcExtractParamAndSanitize E "$QUERY_STRING"
 	fi
 fi
 
@@ -50,7 +46,7 @@ if [ $TYPEREQUEST == "POST" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		/bin/sh api-response.sh "Params not found"
+		echo "No params found"
 	else
 		funcExtractParamAndSanitize "I" "$PARAM"
 	fi
@@ -58,28 +54,27 @@ fi
 
 ### PUT
 if [ $TYPEREQUEST == "PUT" ]; then
-	echo "metodo put"
+	echo "metdodo put"
 	PARAM="$(cat)"
-	echo $PARAM
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		/bin/sh api-response.sh "Params not found"
+		echo "No params found"
 	else
-		funcExtractParamAndSanitize "I" "$PARAM"
+		funcExtractParamAndSanitize I "$PARAM"
 	fi
 fi
 
 ### PATCH
 if [ $TYPEREQUEST == "PATCH" ]; then
-	echo "metodo patch"
+	echo "metdodo patch"
 	PARAM="$(cat)"
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		/bin/sh api-response.sh "Params not found"
+		echo "No params found"
 	else
-		funcExtractParamAndSanitize "I" "$PARAM"
+		funcExtractParamAndSanitize I "$PARAM"
 	fi
 fi
 
@@ -90,9 +85,9 @@ if [ $TYPEREQUEST == "DELETE" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		/bin/sh api-response.sh "Params not found"
+		echo "No params found"
 	else
-		funcExtractParamAndSanitize "" "$PARAM"
+		funcExtractParamAndSanitize "$PARAM"
 	fi
 fi
 

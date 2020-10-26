@@ -2,7 +2,12 @@
 # ----------------------
 # Leonardo A Carrilho
 # 2020, April
-# Route /contact
+# Route ip-number:port/contact
+#
+# Cria o user: POST
+# Edita user: PUT, UPDATE
+# Deleta user: DELETE
+#
 # ----------------------
 echo "Content-Type: text/html"
 echo
@@ -23,7 +28,7 @@ function funcExtractParamAndSanitize(){
 
 ### GET
 if [ $TYPEREQUEST == "GET" ]; then
-	echo "Nothing here :("
+	/bin/sh api-response.sh "Inappropriate method GET."
 fi
 
 ### POST
@@ -33,19 +38,19 @@ if [ $TYPEREQUEST == "POST" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		echo "No params found"
+		/bin/sh api-response.sh "Params not found"
 	else
 		funcExtractParamAndSanitize "$PARAM"
-		
+
 		# Monta os argumentos para passar ao script que manuseará o BD
 		tb_name=tb_user
 		fields="user_name, user_birth, user_gender, user_gender_pref, user_photo"
 		values=" "''"'$name'"''", "''"'$birth'"''", "''"'$gender'"''", "''"'$gender_pref'"''", "''"'$photo'"''" "
-		
+
 		# Send to script that will make the job with Postgresql!
 		/bin/sh api-crud-create.sh "$tb_name" "$fields" "$values"
 		# Exit this script
-		exit 0	
+		exit 0
 	fi
 fi
 
@@ -56,7 +61,7 @@ if [ $TYPEREQUEST == "PUT" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		echo "No params found"
+		/bin/sh api-response.sh "Params not found"
 	else
 		funcExtractParamAndSanitize "$PARAM"
 
@@ -64,7 +69,7 @@ if [ $TYPEREQUEST == "PUT" ]; then
 		tb_name=tb_user
 		fields="user_name, user_birth, user_gender, user_gender_pref, user_photo"
 		values=" "''"'$name'"''", "''"'$birth'"''", "''"'$gender'"''", "''"'$gender_pref'"''", "''"'$photo'"''" "
-		
+
 		# Send to script that will make the job with Postgresql!
 		/bin/sh api-crud-update.sh "$tb_name" "$fields" "$values"
 		# Exit this script
@@ -80,7 +85,7 @@ if [ $TYPEREQUEST == "PATCH" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		echo "No params found"
+		/bin/sh api-response.sh "Params not found"
 	else
 		funcExtractParamAndSanitize "$PARAM"
 	fi
@@ -93,7 +98,7 @@ if [ $TYPEREQUEST == "DELETE" ]; then
 	# Check if return params
 	if [ -z "$PARAM" ]; then
 		# No params
-		echo "No params found"
+		/bin/sh api-response.sh "Params not found"
 	else
 		#funcExtractParamAndSanitize "$PARAM"
 
@@ -101,7 +106,7 @@ if [ $TYPEREQUEST == "DELETE" ]; then
 		tb_name=tb_user
 		fields=user_id
 		values=$(echo $PARAM | jq -r '.user_id')
-		
+
 		# Send to script that will make the job with Postgresql!
 		/bin/sh api-crud-delete.sh "$tb_name" "$fields" "$values"
 		# Exit this script
