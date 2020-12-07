@@ -7,22 +7,22 @@
 
 
 # Connection data
-USERROLE=leonardo
-LOCATION=localhost
-DBNAME=db_kdvc
-PORT=5432
+USERROLE="leonardo"
+LOCATION="localhost"
+DBNAME="db_kdvc"
+PORT="5432"
 
 function funCreateTables(){
 # Create the tables
 qry1="CREATE TABLE if not exists tb_user (
 	user_id SERIAL PRIMARY KEY,
 	user_login varchar(50),
-	user_passwd varchar(50), 
+	user_passwd varchar(50),
 	user_name varchar(50),
 	user_surname varchar(50),
-	user_birth varchar(10), 
-	user_gender char, 
-	user_gender_pref char, 
+	user_birth varchar(10),
+	user_gender char,
+	user_gender_pref char,
 	user_photo text,
 	user_privilege char,
 	user_dt_signup varchar(10),
@@ -41,7 +41,7 @@ qry2="CREATE TABLE if not exists tb_action (
 
 qry3="CREATE TABLE if not exists tb_photo (
 	photo_id SERIAL PRIMARY KEY,
-	user_id int, 
+	user_id int,
 	photo_index int,
 	photo_uri varchar(100),
 	photo_status char,
@@ -61,6 +61,7 @@ declare -a arrQries
 arrQries=("$qry1" "$qry2" "$qry3" "$qry4")
 lengthArray=${#arrQries[@]}
 
+# Display on screen to Programmer
 clear
 echo "Building tables..."
 
@@ -68,7 +69,8 @@ echo "Building tables..."
 for(( i=0; i<=$lengthArray; i++ )){
 	arrOutput=$( psql -U "$USERROLE" -h "$LOCATION" -p "$PORT" -d "$DBNAME" -c "${arrQries[$i]};" )
 	#echo "${arrQries[$i]}"
-} 
+}
+echo "it's done [Create tables]."
 } #end function
 
 
@@ -83,7 +85,7 @@ for (( i=0; i<${#arrTableNames[@]}; i++ )){
 for (( i=1; i<100; i++ )){
 	psql -U "$USERROLE" -h "$LOCATION" -p "$PORT" -d "$DBNAME" -c "DROP TABLE IF EXISTS tb_contact_$i CASCADE;"
 }
-
+echo "it's done [Delete]."
 } #end funtion
 
 
@@ -108,10 +110,10 @@ case $key in
 	;;
 	"9")
 		clear
-		echo "Tchau ;)"
+		echo "It's done!"
 		break
 	;;
-	*)	
+	*)
 		funMenu
 	;;
 esac
