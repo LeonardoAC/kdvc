@@ -10,6 +10,10 @@ USERROLE="leonardo"
 LOCATION="localhost"
 DBNAME="db_kdvc"
 DBCONNECT="psql -U $USERROLE -h $LOCATION -d $DBNAME"
+QRY="$1"
+sessionid="$2"
 
-jsonOutput=$( $DBCONNECT -t -c "$1"; )
-echo '{"sessid":"", "msg":"$1", "data":{"'$jsonOutput'"}}'
+#echo $1
+jsonOutput=$( $DBCONNECT -t -c "$QRY"; )
+jsonOutput='{"sessid":"'$sessionid'", "msg":"Ok", "data":'$jsonOutput'}'
+echo $jsonOutput

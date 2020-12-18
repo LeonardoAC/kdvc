@@ -38,13 +38,19 @@ if [ ! -z "$tb_name" ] && [ ! -z "$tb_fields" ] && [ ! -z "$tb_values" ]; then
   # Executa
 	output=$( psql -U $USERROLE -h $LOCATION -d $DBNAME -c "$QRY"; )
 	# Armazena o insert em um log
-	echo "[" $(date) "] "$output" "$tb_contact_fresh_userID >> log-api-crud-create
+	echo "[" $(date) "] "$output" "$tb_contact_fresh_userID >> log/log-api-crud-create
 	# Exibe o resultado de uma forma mais digerivel
-  [[ $output == "CREATE TABLE" ]] && output="User criado." || output="Erro no login."
+  if [[ $output == "CREATE TABLE" ]]; then
+		output="User criado."
+		# Send e-mail verification to user
+		/bin/sh api-email-send.sh "leo_carrilho" "1" "Leonardo"
+	else
+		output="Erro no login."
+	fi
 	/bin/sh api-response.sh '{"sessid":"", "msg":"'"$output"'", "data":""}'
 	# Close connection to DB
 	#psql \q
 else
-	# Exibe mensagem de erro
+	# Campos vazios - exibe msg erro
 	/bin/sh api-response.sh '{"sessid":"", "msg":"ERROR The correct syntax is: <tb_name:str> <tb_fields:str> <tb_values:str>", "data":""}'
 fi

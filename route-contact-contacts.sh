@@ -48,11 +48,13 @@ if [ $TYPEREQUEST == "GET" ]; then
 		# No params
 		/bin/sh api-response.sh "$msgParamNotFound"
 	else
+    # Separa os argumentos em array
     sizeOfParam=${#PARAM}
-		id=${PARAM:3:${sizeOfParam}}
+		id=${PARAM:3:1} # TOMAR CUIDADO COM O LENGTH DO ID
+    sessid=${PARAM:10:$sizeOfParam} # TOMAR CUIDADO COM O LENGTH DE CARACTERES NA URL QUE PRECEDEM O ultimo parametro
     # Query all contacts from that id
-    QRY="Select row_to_json(t) from (select contact_id as id, contact_status as status from tb_contact_"$id" where user_id = "$id" and contact_status = 0 or contact_status = 1 order by contact_id asc) t"
-    /bin/sh execquery.sh "$QRY"
+    QRY="Select array_to_json(array_agg(t)) from (select contact_id as id, contact_status as status from tb_contact_"$id" where user_id = "$id" and contact_status = 0 or contact_status = 1 order by contact_id asc) t"
+    /bin/sh execquery.sh "$QRY" "$sessid"
 	fi #PARAM
 fi
 
@@ -111,4 +113,7 @@ fi
 
 
 
-###### Check what route is from
+###### Bibliograph ######
+#
+# https://bigbinary.com/blog/generating-json-using-postgresql-json-function
+# Handling GET params into array: https://stackoverflow.com/questions/3919755/how-to-parse-query-string-from-a-bash-cgi-script

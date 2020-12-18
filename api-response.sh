@@ -12,8 +12,8 @@
 # CORS
 # **************************************************************************
 echo "Access-Control-Allow-Origin: *"
-#echo "Content-Type: text/Json"
-echo "Content-Type: text/html"
+echo "Content-Type: text/Json"
+#echo "Content-Type: text/html"
 echo
 
 #echo "api-response says: "$1
